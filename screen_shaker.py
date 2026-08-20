@@ -82,17 +82,6 @@ DEFAULT_SETTINGS = {
     "input_method": "自动",
     "restore_cursor": True,
 }
-UI_BG = "#edf4f3"
-UI_SURFACE = "#ffffff"
-UI_SURFACE_MUTED = "#f6faf9"
-UI_NAVY = "#143b4a"
-UI_NAVY_LIGHT = "#1d5261"
-UI_TEAL = "#159c92"
-UI_TEAL_DARK = "#0b766f"
-UI_CORAL = "#ef806d"
-UI_TEXT = "#1d3942"
-UI_MUTED = "#6c8187"
-UI_LINE = "#d8e6e3"
 settings_root = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "DaeShake"
 settings_file = settings_root / "settings.json"
 
@@ -430,7 +419,7 @@ class ShakeApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("抓大鹅 - 晃屏助手")
-        self.root.configure(bg=UI_BG)
+        self.root.configure(bg="#f3f6f8")
         try:
             self.root.iconbitmap(default=str(resource_path("app_icon.ico")))
         except (OSError, tk.TclError):
@@ -487,10 +476,10 @@ class ShakeApp:
     def configure_window_size(self) -> None:
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
-        width = min(640, max(440, screen_width - 48))
-        height = min(780, max(560, screen_height - 72))
+        width = min(620, max(360, screen_width - 32))
+        height = min(740, max(420, screen_height - 72))
         self.root.geometry(f"{width}x{height}")
-        self.root.minsize(min(440, width), min(560, height))
+        self.root.minsize(min(360, width), min(420, height))
         self.root.resizable(True, True)
 
     def configure_style(self) -> None:
@@ -499,36 +488,19 @@ class ShakeApp:
             style.theme_use("vista")
         except tk.TclError:
             pass
-        style.configure("TFrame", background=UI_BG)
-        style.configure("Panel.TFrame", background=UI_SURFACE)
-        style.configure("TLabel", background=UI_BG, foreground=UI_TEXT, font=("Microsoft YaHei UI", 10))
-        style.configure("Panel.TLabel", background=UI_SURFACE, foreground=UI_TEXT, font=("Microsoft YaHei UI", 10))
-        style.configure("Title.TLabel", background=UI_BG, foreground=UI_NAVY, font=("Microsoft YaHei UI", 19, "bold"))
-        style.configure("Subtitle.TLabel", background=UI_BG, foreground=UI_MUTED, font=("Microsoft YaHei UI", 9))
-        style.configure("Section.TLabel", background=UI_SURFACE, foreground=UI_TEAL_DARK, font=("Microsoft YaHei UI", 11, "bold"))
-        style.configure("Hint.TLabel", background=UI_SURFACE, foreground=UI_MUTED, font=("Microsoft YaHei UI", 9))
-        style.configure("Panel.TCheckbutton", background=UI_SURFACE, foreground=UI_TEXT, font=("Microsoft YaHei UI", 9))
-        style.configure("Gift.TLabel", background=UI_BG, foreground="#809196", font=("Microsoft YaHei UI", 9))
-        style.configure("Metric.TLabel", background=UI_SURFACE, foreground=UI_TEAL_DARK, font=("Microsoft YaHei UI", 9, "bold"))
-        style.configure("Status.TLabel", background="#e8f5f2", foreground=UI_TEAL_DARK, font=("Microsoft YaHei UI", 9))
-        style.configure("TCombobox", padding=(8, 5), foreground=UI_TEXT, fieldbackground=UI_SURFACE)
-        style.map(
-            "TCombobox",
-            fieldbackground=[("readonly", UI_SURFACE)],
-            foreground=[("readonly", UI_TEXT)],
-            bordercolor=[("focus", UI_TEAL)],
-            lightcolor=[("focus", UI_TEAL)],
-            darkcolor=[("focus", UI_TEAL)],
-        )
-        style.configure(
-            "Accent.Horizontal.TScale",
-            troughcolor="#dcebe8",
-            background=UI_TEAL,
-            bordercolor="#dcebe8",
-            lightcolor=UI_TEAL,
-            darkcolor=UI_TEAL_DARK,
-        )
-        style.configure("TScrollbar", troughcolor=UI_BG, background="#c7d9d6", arrowcolor=UI_MUTED)
+        style.configure("TFrame", background="#f3f6f8")
+        style.configure("Panel.TFrame", background="#ffffff")
+        style.configure("TLabel", background="#f3f6f8", foreground="#243b53", font=("Microsoft YaHei UI", 10))
+        style.configure("Panel.TLabel", background="#ffffff", foreground="#243b53", font=("Microsoft YaHei UI", 10))
+        style.configure("Title.TLabel", background="#f3f6f8", foreground="#17324d", font=("Microsoft YaHei UI", 19, "bold"))
+        style.configure("Subtitle.TLabel", background="#f3f6f8", foreground="#607286", font=("Microsoft YaHei UI", 9))
+        style.configure("Section.TLabel", background="#ffffff", foreground="#0f766e", font=("Microsoft YaHei UI", 11, "bold"))
+        style.configure("Hint.TLabel", background="#ffffff", foreground="#66788a", font=("Microsoft YaHei UI", 9))
+        style.configure("Panel.TCheckbutton", background="#ffffff", foreground="#243b53", font=("Microsoft YaHei UI", 9))
+        style.configure("Gift.TLabel", background="#f3f6f8", foreground="#718096", font=("Microsoft YaHei UI", 9))
+        style.configure("Metric.TLabel", background="#ffffff", foreground="#0f766e", font=("Microsoft YaHei UI", 9, "bold"))
+        style.configure("Small.TButton", font=("Microsoft YaHei UI", 9), padding=(9, 5))
+        style.configure("TCombobox", padding=5)
 
     def load_ui_icons(self) -> None:
         for name in (
@@ -546,73 +518,25 @@ class ShakeApp:
             except tk.TclError:
                 pass
 
-    @staticmethod
-    def make_card(parent: tk.Misc) -> tk.Frame:
-        return tk.Frame(
-            parent,
-            bg=UI_SURFACE,
-            padx=16,
-            pady=14,
-            borderwidth=0,
-            highlightbackground=UI_LINE,
-            highlightcolor=UI_LINE,
-            highlightthickness=1,
-        )
-
     def add_section_heading(self, parent: tk.Misc, text: str, icon_name: str) -> None:
-        row = tk.Frame(parent, bg=UI_SURFACE)
+        row = tk.Frame(parent, bg="#ffffff")
         row.pack(anchor="w")
         icon = self.ui_icons.get(icon_name)
         if icon is not None:
-            tk.Label(row, image=icon, bg=UI_SURFACE, borderwidth=0).pack(side="left", padx=(0, 8))
+            tk.Label(row, image=icon, bg="#ffffff", borderwidth=0).pack(side="left", padx=(0, 8))
         ttk.Label(row, text=text, style="Section.TLabel").pack(side="left")
-
-    @staticmethod
-    def make_form_label(parent: tk.Misc, text: str) -> tk.Label:
-        return tk.Label(
-            parent,
-            text=text,
-            width=9,
-            anchor="w",
-            bg=UI_SURFACE,
-            fg=UI_TEXT,
-            font=("Microsoft YaHei UI", 9),
-        )
-
-    @staticmethod
-    def make_light_button(parent: tk.Misc, text: str, image: tk.PhotoImage | None, command) -> tk.Button:
-        return tk.Button(
-            parent,
-            text=text,
-            image=image,
-            compound="left",
-            command=command,
-            font=("Microsoft YaHei UI", 9, "bold"),
-            bg=UI_SURFACE_MUTED,
-            fg=UI_TEXT,
-            activebackground="#e5f2ef",
-            activeforeground=UI_TEAL_DARK,
-            relief="flat",
-            borderwidth=0,
-            highlightbackground=UI_LINE,
-            highlightcolor=UI_TEAL,
-            highlightthickness=1,
-            cursor="hand2",
-            padx=10,
-            pady=7,
-        )
 
     def build_ui(self) -> None:
         self.load_ui_icons()
-        viewport = tk.Frame(self.root, bg=UI_BG, borderwidth=0, highlightthickness=0)
+        viewport = tk.Frame(self.root, bg="#f3f6f8", borderwidth=0, highlightthickness=0)
         viewport.pack(fill="both", expand=True)
-        canvas = tk.Canvas(viewport, bg=UI_BG, borderwidth=0, highlightthickness=0)
+        canvas = tk.Canvas(viewport, bg="#f3f6f8", borderwidth=0, highlightthickness=0)
         scrollbar = ttk.Scrollbar(viewport, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=scrollbar.set)
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        outer = tk.Frame(canvas, bg=UI_BG, padx=20, pady=18)
+        outer = ttk.Frame(canvas, padding=(16, 20, 16, 16))
         outer_window = canvas.create_window((0, 0), window=outer, anchor="nw")
         self.scroll_canvas = canvas
         self.wrap_labels: list[tk.Misc] = []
@@ -631,15 +555,14 @@ class ShakeApp:
 
         header = tk.Frame(
             outer,
-            bg=UI_NAVY,
+            bg="#163b45",
+            padx=16,
+            pady=14,
             borderwidth=0,
             highlightthickness=0,
         )
         header.pack(fill="x", pady=(0, 16))
-        tk.Frame(header, bg=UI_CORAL, height=4).pack(fill="x")
-        header_content = tk.Frame(header, bg=UI_NAVY, padx=18, pady=15)
-        header_content.pack(fill="x")
-        header_row = tk.Frame(header_content, bg=UI_NAVY)
+        header_row = tk.Frame(header, bg="#163b45")
         header_row.pack(fill="x")
         try:
             self.header_icon_source = tk.PhotoImage(file=str(resource_path("app_icon.png")))
@@ -648,51 +571,50 @@ class ShakeApp:
             self.header_icon_source = None
             self.header_icon = None
         if self.header_icon is not None:
-            tk.Label(header_row, image=self.header_icon, bg=UI_NAVY, borderwidth=0).pack(
+            tk.Label(header_row, image=self.header_icon, bg="#163b45", borderwidth=0).pack(
                 side="left", padx=(0, 10)
             )
         tk.Label(
             header_row,
             text="抓大鹅 · 晃屏助手",
-            bg=UI_NAVY,
+            bg="#163b45",
             fg="#ffffff",
-            font=("Microsoft YaHei UI", 18, "bold"),
+            font=("Microsoft YaHei UI", 17, "bold"),
         ).pack(side="left")
         header_hint = tk.Label(
-            header_content,
-            text="保持抓大鹅小程序在前台 · Ctrl+Alt+F8 快速晃动",
-            bg=UI_NAVY,
-            fg="#b9d7d8",
+            header,
+            text="保持抓大鹅小程序在前台，按 Ctrl+Alt+F8 晃一下",
+            bg="#163b45",
+            fg="#c8dfe2",
             font=("Microsoft YaHei UI", 9),
             anchor="w",
             justify="left",
         )
-        header_hint.pack(fill="x", pady=(8, 0))
+        header_hint.pack(fill="x", pady=(9, 0))
         self.wrap_labels.append(header_hint)
 
-        target_panel = self.make_card(outer)
-        target_panel.pack(fill="x")
-        self.add_section_heading(target_panel, "目标窗口", "target")
-        target_hint_label = tk.Label(
-            target_panel,
-            text="默认从客户区顶部中心开始，按住左键连续拖动。",
-            bg=UI_SURFACE,
-            fg=UI_MUTED,
-            font=("Microsoft YaHei UI", 9),
-            anchor="w",
-        )
-        target_hint_label.pack(fill="x", pady=(4, 10))
-        self.wrap_labels.append(target_hint_label)
-
-        select_row = tk.Frame(
-            target_panel,
-            bg=UI_SURFACE_MUTED,
-            padx=8,
-            pady=6,
-            highlightbackground=UI_LINE,
-            highlightcolor=UI_TEAL,
+        target_panel = tk.Frame(
+            outer,
+            bg="#ffffff",
+            padx=12,
+            pady=12,
+            borderwidth=0,
+            relief="flat",
+            highlightbackground="#d7e3e8",
+            highlightcolor="#d7e3e8",
             highlightthickness=1,
         )
+        target_panel.pack(fill="x")
+        self.add_section_heading(target_panel, "目标窗口", "target")
+        target_hint_label = ttk.Label(
+            target_panel,
+            text="默认从客户区顶部中心开始，按住左键连续拖动。",
+            style="Hint.TLabel",
+        )
+        target_hint_label.pack(anchor="w", pady=(3, 10))
+        self.wrap_labels.append(target_hint_label)
+
+        select_row = ttk.Frame(target_panel, style="Panel.TFrame")
         select_row.pack(fill="x")
         self.window_combo = ttk.Combobox(
             select_row,
@@ -703,78 +625,63 @@ class ShakeApp:
         )
         self.window_combo.pack(side="left", fill="x", expand=True)
 
-        target_actions = tk.Frame(target_panel, bg=UI_SURFACE)
+        target_actions = ttk.Frame(target_panel, style="Panel.TFrame")
         target_actions.pack(fill="x", pady=(8, 0))
         target_actions.columnconfigure(0, weight=1)
         target_actions.columnconfigure(1, weight=1)
-        self.make_light_button(
+        ttk.Button(
             target_actions,
             text="刷新",
             image=self.ui_icons.get("refresh"),
+            compound="left",
+            style="Small.TButton",
             command=self.refresh_windows,
-        ).grid(row=0, column=0, sticky="ew")
-        self.make_light_button(
+        ).grid(
+            row=0, column=0, sticky="ew"
+        )
+        ttk.Button(
             target_actions,
             text="自动找抓大鹅",
             image=self.ui_icons.get("search"),
+            compound="left",
+            style="Small.TButton",
             command=self.auto_find_goose,
-        ).grid(row=0, column=1, sticky="ew", padx=(8, 0))
-        self.set_target_button = tk.Button(
+        ).grid(
+            row=0, column=1, sticky="ew", padx=(8, 0)
+        )
+        ttk.Button(
             target_actions,
             text="设为目标",
             image=self.ui_icons.get("check"),
             compound="left",
+            style="Small.TButton",
             command=self.set_target,
+        ).grid(
+            row=1, column=0, columnspan=2, sticky="ew", pady=(8, 0)
         )
-        self.set_target_button.configure(
-            font=("Microsoft YaHei UI", 9, "bold"),
-            bg="#e4f3ef",
-            fg=UI_TEAL_DARK,
-            activebackground="#d4ebe5",
-            activeforeground=UI_TEAL_DARK,
-            relief="flat",
-            borderwidth=0,
-            highlightbackground="#b9dcd5",
-            highlightcolor=UI_TEAL,
-            highlightthickness=1,
-            cursor="hand2",
-            padx=10,
-            pady=7,
-        )
-        self.set_target_button.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(8, 0))
 
-        target_status = tk.Frame(target_panel, bg="#e8f5f2", padx=10, pady=7)
-        target_status.pack(fill="x", pady=(10, 0))
-        tk.Label(target_status, text="●", bg="#e8f5f2", fg=UI_TEAL, font=("Arial", 9)).pack(
-            side="left", padx=(0, 7)
-        )
-        target_label = tk.Label(
-            target_status,
-            textvariable=self.target_var,
-            bg="#e8f5f2",
-            fg=UI_TEAL_DARK,
-            font=("Microsoft YaHei UI", 9),
-            anchor="w",
-            justify="left",
-        )
-        target_label.pack(side="left", fill="x", expand=True)
+        target_label = ttk.Label(target_panel, textvariable=self.target_var, style="Hint.TLabel")
+        target_label.pack(anchor="w", pady=(10, 0))
         self.wrap_labels.append(target_label)
 
-        settings_panel = self.make_card(outer)
+        settings_panel = tk.Frame(
+            outer,
+            bg="#ffffff",
+            padx=12,
+            pady=12,
+            borderwidth=0,
+            relief="flat",
+            highlightbackground="#d7e3e8",
+            highlightcolor="#d7e3e8",
+            highlightthickness=1,
+        )
         settings_panel.pack(fill="x", pady=(14, 0))
         self.add_section_heading(settings_panel, "拖动参数", "sliders")
 
-        preset_row = tk.Frame(settings_panel, bg=UI_SURFACE)
+        preset_row = tk.Frame(settings_panel, bg="#ffffff")
         preset_row.pack(fill="x", pady=(12, 2))
-        self.make_form_label(preset_row, "模式").pack(side="left")
-        preset_control = tk.Frame(
-            preset_row,
-            bg="#e8f1ef",
-            padx=3,
-            pady=3,
-            highlightbackground=UI_LINE,
-            highlightthickness=1,
-        )
+        ttk.Label(preset_row, text="模式", style="Panel.TLabel", width=9).pack(side="left")
+        preset_control = tk.Frame(preset_row, bg="#e8eef1", padx=2, pady=2)
         preset_control.pack(side="left", fill="x", expand=True, padx=(4, 0))
         for preset in PRESET_OPTIONS:
             tk.Radiobutton(
@@ -784,11 +691,11 @@ class ShakeApp:
                 variable=self.preset_var,
                 command=self.apply_preset,
                 indicatoron=False,
-                bg="#e8f1ef",
-                fg=UI_TEXT,
-                selectcolor="#c7e8e1",
-                activebackground="#d8eee9",
-                activeforeground=UI_TEAL_DARK,
+                bg="#e8eef1",
+                fg="#40566b",
+                selectcolor="#b9dcd8",
+                activebackground="#d7e7e7",
+                activeforeground="#17324d",
                 font=("Microsoft YaHei UI", 9, "bold"),
                 relief="flat",
                 borderwidth=0,
@@ -797,72 +704,99 @@ class ShakeApp:
                 cursor="hand2",
             ).pack(side="left", fill="x", expand=True)
 
-        def add_slider_row(label_text: str, variable, start: int, end: int, value_variable, command) -> None:
-            row = tk.Frame(settings_panel, bg=UI_SURFACE)
-            row.pack(fill="x", pady=(10, 0))
-            self.make_form_label(row, label_text).pack(side="left")
-            ttk.Scale(
-                row,
-                from_=start,
-                to=end,
-                variable=variable,
-                command=command,
-                style="Accent.Horizontal.TScale",
-            ).pack(side="left", fill="x", expand=True, padx=(4, 12))
-            tk.Label(
-                row,
-                textvariable=value_variable,
-                bg="#e8f5f2",
-                fg=UI_TEAL_DARK,
-                font=("Microsoft YaHei UI", 9, "bold"),
-                width=8,
-                anchor="e",
-                padx=7,
-                pady=3,
-            ).pack(side="left")
+        distance_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        distance_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(distance_row, text="拖动距离", style="Panel.TLabel", width=9).pack(side="left")
+        distance_scale = ttk.Scale(
+            distance_row,
+            from_=4,
+            to=300,
+            variable=self.distance_var,
+            command=self.update_distance_label,
+        )
+        distance_scale.pack(side="left", fill="x", expand=True, padx=(4, 12))
+        ttk.Label(distance_row, textvariable=self.distance_label_var, style="Panel.TLabel", width=7).pack(side="left")
 
-        add_slider_row("拖动距离", self.distance_var, 4, 300, self.distance_label_var, self.update_distance_label)
-        add_slider_row("持续时间", self.duration_var, 120, 1200, self.duration_label_var, self.update_duration_label)
-        tk.Label(
-            settings_panel,
-            textvariable=self.speed_label_var,
-            bg=UI_SURFACE,
-            fg=UI_TEAL_DARK,
-            font=("Microsoft YaHei UI", 9, "bold"),
-            anchor="e",
-        ).pack(fill="x", pady=(5, 0))
-        tk.Frame(settings_panel, bg=UI_LINE, height=1).pack(fill="x", pady=(12, 1))
+        duration_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        duration_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(duration_row, text="持续时间", style="Panel.TLabel", width=9).pack(side="left")
+        duration_scale = ttk.Scale(
+            duration_row,
+            from_=120,
+            to=1200,
+            variable=self.duration_var,
+            command=self.update_duration_label,
+        )
+        duration_scale.pack(side="left", fill="x", expand=True, padx=(4, 12))
+        ttk.Label(duration_row, textvariable=self.duration_label_var, style="Panel.TLabel", width=7).pack(side="left")
+        ttk.Label(settings_panel, textvariable=self.speed_label_var, style="Metric.TLabel").pack(
+            anchor="e", pady=(4, 0)
+        )
 
-        def add_combo_row(label_text: str, values: tuple[str, ...], variable, width: int, callback=None):
-            row = tk.Frame(settings_panel, bg=UI_SURFACE)
-            row.pack(fill="x", pady=(10, 0))
-            self.make_form_label(row, label_text).pack(side="left")
-            combo = ttk.Combobox(
-                row,
-                values=values,
-                state="readonly",
-                width=width,
-                textvariable=variable,
-            )
-            combo.pack(side="left", padx=(4, 0))
-            if callback is not None:
-                combo.bind("<<ComboboxSelected>>", callback)
-            return combo
+        cycles_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        cycles_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(cycles_row, text="重复次数", style="Panel.TLabel", width=9).pack(side="left")
+        self.cycles_combo = ttk.Combobox(
+            cycles_row,
+            values=("2", "4", "6", "8"),
+            state="readonly",
+            width=5,
+            textvariable=self.cycles_var,
+        )
+        self.cycles_combo.pack(side="left", padx=(4, 0))
+        self.cycles_combo.bind("<<ComboboxSelected>>", self.on_shape_option_changed)
 
-        self.cycles_combo = add_combo_row(
-            "重复次数", ("2", "4", "6", "8"), self.cycles_var, 5, self.on_shape_option_changed
+        direction_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        direction_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(direction_row, text="摇晃策略", style="Panel.TLabel", width=9).pack(side="left")
+        self.direction_combo = ttk.Combobox(
+            direction_row,
+            textvariable=self.direction_var,
+            values=STRATEGY_OPTIONS,
+            state="readonly",
+            width=14,
         )
-        self.direction_combo = add_combo_row(
-            "摇晃策略", STRATEGY_OPTIONS, self.direction_var, 14, self.on_shape_option_changed
+        self.direction_combo.pack(side="left", padx=(4, 0))
+        self.direction_combo.bind("<<ComboboxSelected>>", self.on_shape_option_changed)
+
+        origin_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        origin_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(origin_row, text="起点", style="Panel.TLabel", width=9).pack(side="left")
+        self.origin_combo = ttk.Combobox(
+            origin_row,
+            textvariable=self.origin_var,
+            values=("顶部中心", "客户区中心", "当前鼠标"),
+            state="readonly",
+            width=12,
         )
-        self.origin_combo = add_combo_row(
-            "起点", ("顶部中心", "客户区中心", "当前鼠标"), self.origin_var, 12,
-            lambda _event: self.schedule_save(),
+        self.origin_combo.pack(side="left", padx=(4, 0))
+        self.origin_combo.bind("<<ComboboxSelected>>", lambda _event: self.schedule_save())
+
+        top_offset_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        top_offset_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(top_offset_row, text="顶部偏移", style="Panel.TLabel", width=9).pack(side="left")
+        top_offset_scale = ttk.Scale(
+            top_offset_row,
+            from_=0,
+            to=160,
+            variable=self.top_offset_var,
+            command=self.update_top_offset_label,
         )
-        add_slider_row("顶部偏移", self.top_offset_var, 0, 160, self.top_offset_label_var, self.update_top_offset_label)
-        self.input_method_combo = add_combo_row(
-            "输入方式", INPUT_METHOD_OPTIONS, self.input_method_var, 12, self.on_input_method_changed
+        top_offset_scale.pack(side="left", fill="x", expand=True, padx=(4, 12))
+        ttk.Label(top_offset_row, textvariable=self.top_offset_label_var, style="Panel.TLabel", width=7).pack(side="left")
+
+        input_method_row = ttk.Frame(settings_panel, style="Panel.TFrame")
+        input_method_row.pack(fill="x", pady=(10, 0))
+        ttk.Label(input_method_row, text="输入方式", style="Panel.TLabel", width=9).pack(side="left")
+        self.input_method_combo = ttk.Combobox(
+            input_method_row,
+            textvariable=self.input_method_var,
+            values=INPUT_METHOD_OPTIONS,
+            state="readonly",
+            width=12,
         )
+        self.input_method_combo.pack(side="left", padx=(4, 0))
+        self.input_method_combo.bind("<<ComboboxSelected>>", self.on_input_method_changed)
 
         ttk.Checkbutton(
             settings_panel,
@@ -870,13 +804,13 @@ class ShakeApp:
             variable=self.restore_cursor_var,
             command=self.schedule_save,
             style="Panel.TCheckbutton",
-        ).pack(anchor="w", pady=(12, 0))
+        ).pack(anchor="w", pady=(10, 0))
 
-        button_row = tk.Frame(outer, bg=UI_BG)
-        button_row.pack(fill="x", pady=(18, 10))
-        button_row.columnconfigure(0, weight=3)
-        button_row.columnconfigure(1, weight=1, minsize=136)
-        button_row.rowconfigure(0, minsize=60)
+        button_row = ttk.Frame(outer)
+        button_row.pack(fill="x", pady=(18, 12))
+        button_row.columnconfigure(0, weight=1)
+        button_row.columnconfigure(1, weight=0, minsize=118)
+        button_row.rowconfigure(0, minsize=58)
         self.shake_button = tk.Button(
             button_row,
             text="晃一下",
@@ -884,13 +818,12 @@ class ShakeApp:
             compound="left",
             command=self.quick_shake,
             font=("Microsoft YaHei UI", 15, "bold"),
-            bg=UI_TEAL,
+            bg="#0f766e",
             fg="#ffffff",
-            activebackground=UI_TEAL_DARK,
+            activebackground="#0b5d58",
             activeforeground="#ffffff",
             relief="flat",
             borderwidth=0,
-            highlightthickness=0,
             cursor="hand2",
             padx=18,
             pady=12,
@@ -903,61 +836,35 @@ class ShakeApp:
             compound="left",
             command=self.stop_drag,
             font=("Microsoft YaHei UI", 11, "bold"),
-            bg=UI_CORAL,
+            bg="#9f4450",
             fg="#ffffff",
-            disabledforeground="#f7d8d1",
-            activebackground="#d96e5d",
+            activebackground="#923c46",
             activeforeground="#ffffff",
             relief="flat",
             borderwidth=0,
-            highlightthickness=0,
             cursor="hand2",
-            padx=12,
+            padx=16,
             pady=12,
             state="disabled",
         )
         self.stop_button.grid(row=0, column=1, sticky="nsew", padx=(10, 0))
 
-        shortcut_label = tk.Label(
+        shortcut_label = ttk.Label(
             outer,
-            text="Ctrl+Alt+F7 锁定   ·   Ctrl+Alt+F8 晃一下   ·   Ctrl+Alt+F9 急停",
-            bg=UI_BG,
-            fg=UI_MUTED,
-            font=("Microsoft YaHei UI", 9),
-            anchor="w",
+            text="Ctrl+Alt+F7 锁定    Ctrl+Alt+F8 晃一下    Ctrl+Alt+F9 急停",
+            style="Subtitle.TLabel",
         )
-        shortcut_label.pack(fill="x")
+        shortcut_label.pack(anchor="w")
         self.wrap_labels.append(shortcut_label)
-
-        status_strip = tk.Frame(outer, bg="#e8f5f2", padx=10, pady=8)
-        status_strip.pack(fill="x", pady=(8, 0))
-        tk.Label(status_strip, text="●", bg="#e8f5f2", fg=UI_TEAL, font=("Arial", 9)).pack(
-            side="left", padx=(0, 7)
-        )
-        status_label = tk.Label(
-            status_strip,
-            textvariable=self.status_var,
-            bg="#e8f5f2",
-            fg=UI_TEAL_DARK,
-            font=("Microsoft YaHei UI", 9),
-            anchor="w",
-            justify="left",
-        )
-        status_label.pack(side="left", fill="x", expand=True)
+        status_label = ttk.Label(outer, textvariable=self.status_var, style="Subtitle.TLabel")
+        status_label.pack(anchor="w", pady=(6, 0))
         self.wrap_labels.append(status_label)
-
-        gift_row = tk.Frame(outer, bg=UI_BG)
+        gift_row = tk.Frame(outer, bg="#f3f6f8")
         gift_row.pack(anchor="e", pady=(12, 0))
         gift_icon = self.ui_icons.get("gift")
         if gift_icon is not None:
-            tk.Label(gift_row, image=gift_icon, bg=UI_BG, borderwidth=0).pack(side="left", padx=(0, 5))
-        tk.Label(
-            gift_row,
-            text="送给s的七夕礼物。",
-            bg=UI_BG,
-            fg="#809196",
-            font=("Microsoft YaHei UI", 9),
-        ).pack(side="left")
+            tk.Label(gift_row, image=gift_icon, bg="#f3f6f8", borderwidth=0).pack(side="left", padx=(0, 5))
+        ttk.Label(gift_row, text="送给s的七夕礼物。", style="Gift.TLabel").pack(side="left")
         self.update_speed_label()
         self.update_wrap_lengths()
 
@@ -1123,15 +1030,10 @@ class ShakeApp:
 
     def auto_find_goose(self, silent: bool = False) -> bool:
         self.refresh_windows()
-        browser_markers = ("microsoftedge", "googlechrome", "mozillafirefox", "brave")
         candidates = [
             item
             for item in self.window_items
             if "抓大鹅" in item.title.replace(" ", "")
-            and not any(
-                marker in "".join(item.title.casefold().replace("\u200b", "").split())
-                for marker in browser_markers
-            )
         ]
         if not candidates:
             if not silent:
